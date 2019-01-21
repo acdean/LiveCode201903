@@ -27,7 +27,7 @@ void draw() {
   // video stuff
   if (video) {
     saveFrame("frame#####.png");
-    if (frameCount > 500) {
+    if (frameCount >= 180) {
       exit();
     }
   }
@@ -40,25 +40,25 @@ void keyPressed() {
 
 class Flattener {
   
-  final float MAX_SPEED = .02;
+  final int MAX_SPEED = 3;
   PGraphics pg;
   color bg;
   color fg;
 
-  float rx, ry, rz;
-  float dx, dy, dz;
+  int rx, ry, rz;
+  int dx, dy, dz;
   PShape shape;
   
   Flattener() {
-    rx = random(TWO_PI);
-    ry = random(TWO_PI);
-    rz = random(TWO_PI);
-    dx = random(-MAX_SPEED, MAX_SPEED);
-    dy = random(-MAX_SPEED, MAX_SPEED);
-    dz = random(-MAX_SPEED, MAX_SPEED);
+    rx = (int)random(360);
+    ry = (int)random(360);
+    rz = (int)random(360);
+    dx = randomSpeed();
+    dy = randomSpeed();
+    dz = randomSpeed();
     pg = createGraphics(width, height, P3D);
-    bg = color(random(0, 256), random(0, 256), random(0, 256));
-    fg = color(random(0, 256), random(0, 256), random(0, 256));
+    bg = 255; //color(random(0, 256), random(0, 256), random(0, 256));
+    fg = 0; //color(random(0, 256), random(0, 256), random(0, 256));
     shape = createShape(BOX, 350);
   }
   
@@ -70,15 +70,15 @@ class Flattener {
     pg.beginDraw();
     pg.translate(pg.width / 2, pg.height / 2);
     pg.background(bg);
-    pg.rotateX(rx);
-    pg.rotateY(ry);
-    pg.rotateZ(rz);
+    pg.rotateX(radians(rx));
+    pg.rotateY(radians(ry));
+    pg.rotateZ(radians(rz));
     if (img == null) {
       // initial drawing
       pg.noFill();
-      pg.stroke(fg);
+      pg.stroke(0);
       pg.strokeWeight(5);
-      pg.box(200);
+      pg.box(250);
     } else {
       // textured box
       shape.setStrokeWeight(5);
@@ -89,5 +89,11 @@ class Flattener {
     pg.endDraw();
 
     return pg;
+  }
+  
+  // picks a random speed
+  int randomSpeed() {
+    int[] speed = {-4, -2, 0, 2, 4};
+    return speed[(int)random(speed.length)];
   }
 }
